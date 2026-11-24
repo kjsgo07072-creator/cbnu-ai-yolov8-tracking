@@ -62,10 +62,12 @@ def main():
     rows = []
     background = None
 
+    processed = 0
     for fidx in range(first, last):
         ok, frame = cap.read()
         if not ok:
             break
+        processed += 1
         if background is None:
             background = frame.copy()
         res = model.track(frame, persist=True, tracker=args.tracker, conf=args.conf, verbose=False)[0]
@@ -120,7 +122,7 @@ def main():
     # 3) 요약
     summary = {
         "source": str(src), "model": args.model, "tracker": args.tracker, "conf": args.conf,
-        "fps": fps, "start_sec": args.start, "frames": last - first,
+        "fps": fps, "start_sec": args.start, "frames": processed,
         "tracks": {
             str(tid): {
                 "class": track_cls[tid], "frames_seen": len(pts),

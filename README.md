@@ -9,6 +9,7 @@ YOLOv8n을 3개 부류(bird, cat, dog)로 전이학습하고, 학습한 모델�
 | **학습된 모델** | [`01_trained_model/best.pt`](01_trained_model/best.pt) (YOLOv8n, 6.5MB) |
 | **10초 추적 영상** | [`02_result_videos/1_tracking_10s.mp4`](02_result_videos/1_tracking_10s.mp4) |
 | **10초 카운팅 영상** | [`02_result_videos/2_counting_10s.mp4`](02_result_videos/2_counting_10s.mp4) |
+| **우리 집 강아지 꼬맹이 · 주남이 추적 영상 (14초)** | [`02_result_videos/3_kkomaeng_junam_tracking_14s.mp4`](02_result_videos/3_kkomaeng_junam_tracking_14s.mp4) |
 | 5초 추적 영상 (과제 요구 분량, 3.5~8.5초 구간) | [`02_result_videos/etc/tracking_5s_3.5-8.5s.mp4`](02_result_videos/etc/tracking_5s_3.5-8.5s.mp4) |
 
 ![10초 추적 영상 미리보기](docs/images/preview_tracking_10s.gif)
@@ -23,7 +24,7 @@ YOLOv8n을 3개 부류(bird, cat, dog)로 전이학습하고, 학습한 모델�
 02_result_videos/      추적·카운팅 결과 영상
 data/selection.csv     데이터셋 이미지 목록 (부류별 100장)
 docs/images/           Roboflow 작업 화면, README 미리보기
-input_videos/          추적에 사용한 입력 영상 (10초)
+input_videos/          추적에 사용한 입력 영상 (YouTube 10초, 꼬맹이 · 주남이 14초)
 scripts/               데이터 수집 · 학습 · 추적 · 카운팅 코드
 training_results/      학습 곡선, 혼동 행렬, PR 곡선, valid/test 예측 결과
 trajectories/          객체별 이동 궤적 (CSV, 그림) · 카운팅 결과 (JSON)
@@ -100,6 +101,25 @@ python scripts/count.py --source input_videos/input_dogs_walk_10s.mp4 --line-y 0
 
 Ultralytics `solutions.ObjectCounter`에 학습한 모델을 넣고, 화면 높이 48% 위치에 가로 선을 그어 선을 지나간 객체를 셌습니다.
 결과: **dog IN 2 · OUT 1**, bird IN 1 (강아지를 bird로 잘못 분류한 오탐).
+
+## 5. 추가 실험 — 우리 집 강아지 꼬맹이 · 주남이
+
+직접 휴대폰으로 촬영한 14초 영상(1080×1920, 30fps, 장면 전환 없음)에 같은 모델로 추적을 적용했습니다.
+
+```bash
+python scripts/track.py --source input_videos/input_kkomaeng_junam_14s.mp4 --duration 15 --conf 0.1 --tracker bytetrack.yaml
+```
+
+| 항목 | 결과 |
+|---|---|
+| 객체가 감지된 프레임 | 368 / 422 (87%) |
+| dog로 감지된 프레임 | 255 / 422 (60%) |
+| 가장 오래 유지된 ID | #70 갈색 강아지 172 프레임 (5.7초) |
+| 흰 강아지 | 후반부 #89로 60 프레임 추적, 전반부는 대부분 놓침 |
+
+- 장면 전환이 없어 YouTube 영상보다 ID가 오래 유지됨
+- 털을 짧게 깎은 모습·위에서 내려다본 각도가 COCO 사진과 달라 cat/bird로 잘못 분류되거나 흰 강아지를 놓침, 노란 장난감 오탐도 발생
+- 궤적: [`trajectories/kkomaeng_junam_14s/`](trajectories/kkomaeng_junam_14s/)
 
 ## 한계
 
