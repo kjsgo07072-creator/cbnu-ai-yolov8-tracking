@@ -21,12 +21,12 @@ YOLOv8n을 3개 부류(bird, cat, dog)로 전이학습하고, 학습한 모델�
 ```
 01_trained_model/      학습된 모델 best.pt
 02_result_videos/      추적·카운팅 결과 영상
-03_trajectories/       객체별 이동 궤적 (CSV, 그림) · 카운팅 결과 (JSON)
-04_training_results/   학습 곡선, 혼동 행렬, PR 곡선, valid/test 예측 결과
-05_input_videos/       추적에 사용한 입력 영상 (10초)
-scripts/               데이터 수집 · 학습 · 추적 · 카운팅 코드
 data/selection.csv     데이터셋 이미지 목록 (부류별 100장)
 docs/images/           Roboflow 작업 화면, README 미리보기
+input_videos/          추적에 사용한 입력 영상 (10초)
+scripts/               데이터 수집 · 학습 · 추적 · 카운팅 코드
+training_results/      학습 곡선, 혼동 행렬, PR 곡선, valid/test 예측 결과
+trajectories/          객체별 이동 궤적 (CSV, 그림) · 카운팅 결과 (JSON)
 ```
 
 ## 1. 데이터셋
@@ -71,21 +71,21 @@ python scripts/train.py --epochs 100
 | | cat | 0.659 | 0.529 | 0.563 | 0.284 |
 | | dog | 0.326 | 0.214 | 0.181 | 0.132 |
 
-![학습 곡선](04_training_results/train_e100/results.png)
+![학습 곡선](training_results/train_e100/results.png)
 
 첫 시도는 `patience=20`(조기 종료)으로 21 에폭에서 멈춰 valid mAP50 0.364에 그쳤고,
-조기 종료를 끄고 100 에폭 학습해 valid mAP50 0.544로 올렸습니다 ([`04_training_results/train_try1_e21`](04_training_results/train_try1_e21)).
+조기 종료를 끄고 100 에폭 학습해 valid mAP50 0.544로 올렸습니다 ([`training_results/train_try1_e21`](training_results/train_try1_e21)).
 
 ## 3. 객체 추적 · 궤적 저장
 
 ```bash
-python scripts/track.py --source 05_input_videos/input_dogs_walk_10s.mp4 --duration 10 --conf 0.1 --tracker bytetrack.yaml
+python scripts/track.py --source input_videos/input_dogs_walk_10s.mp4 --duration 10 --conf 0.1 --tracker bytetrack.yaml
 ```
 
 - `model.track(..., persist=True, tracker="bytetrack.yaml")`로 프레임마다 ID를 유지
 - Ultralytics object_tracking 예제처럼 박스 중심점을 이어 궤적을 그리고, **궤적을 따로 저장**하도록 코드를 수정
-  - [`trajectories.csv`](03_trajectories/tracking_10s/trajectories.csv): `frame, time_sec, track_id, class, conf, cx, cy, x1, y1, x2, y2`
-  - [`trajectories.png`](03_trajectories/tracking_10s/trajectories.png): ID별 전체 이동 경로
+  - [`trajectories.csv`](trajectories/tracking_10s/trajectories.csv): `frame, time_sec, track_id, class, conf, cx, cy, x1, y1, x2, y2`
+  - [`trajectories.png`](trajectories/tracking_10s/trajectories.png): ID별 전체 이동 경로
 
 | 영상 | 강아지 감지 프레임 | 생성된 ID | 가장 오래 유지된 ID |
 |---|---|---|---|
@@ -95,7 +95,7 @@ python scripts/track.py --source 05_input_videos/input_dogs_walk_10s.mp4 --durat
 ## 4. 객체 카운팅
 
 ```bash
-python scripts/count.py --source 05_input_videos/input_dogs_walk_10s.mp4 --line-y 0.48
+python scripts/count.py --source input_videos/input_dogs_walk_10s.mp4 --line-y 0.48
 ```
 
 Ultralytics `solutions.ObjectCounter`에 학습한 모델을 넣고, 화면 높이 48% 위치에 가로 선을 그어 선을 지나간 객체를 셌습니다.
