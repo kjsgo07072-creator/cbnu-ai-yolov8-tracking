@@ -11,3 +11,4 @@ __pycache__/
 *.pt
 !01_trained_model/best.pt
 .DS_Store
+report/

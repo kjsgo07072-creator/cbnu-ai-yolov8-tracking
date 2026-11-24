@@ -8,8 +8,8 @@ YOLOv8n을 3개 부류(bird, cat, dog)로 전이학습하고, 학습한 모델�
 |---|---|
 | **학습된 모델** | [`01_trained_model/best.pt`](01_trained_model/best.pt) (YOLOv8n, 6.5MB) |
 | **10초 추적 영상** | [`02_result_videos/1_tracking_10s.mp4`](02_result_videos/1_tracking_10s.mp4) |
-| 10초 카운팅 영상 | [`02_result_videos/2_counting_10s.mp4`](02_result_videos/2_counting_10s.mp4) |
-| 5초 추적 영상 (과제 제출 분량) | [`02_result_videos/3_tracking_5s.mp4`](02_result_videos/3_tracking_5s.mp4) |
+| **10초 카운팅 영상** | [`02_result_videos/2_counting_10s.mp4`](02_result_videos/2_counting_10s.mp4) |
+| 5초 추적 영상 (과제 요구 분량, 3.5~8.5초 구간) | [`02_result_videos/etc/tracking_5s_3.5-8.5s.mp4`](02_result_videos/etc/tracking_5s_3.5-8.5s.mp4) |
 
 ![10초 추적 영상 미리보기](docs/images/preview_tracking_10s.gif)
 
