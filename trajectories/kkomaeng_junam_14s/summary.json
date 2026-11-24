@@ -1,101 +1,57 @@
 {
   "source": "input_videos/input_kkomaeng_junam_14s.mp4",
-  "model": "/Users/kimjunsu/Downloads/cbnu-ai-task/01_trained_model/best.pt",
+  "model": "runs/pets_yolov8n_freeze10/weights/best.pt",
   "tracker": "bytetrack.yaml",
-  "conf": 0.1,
+  "conf": 0.4,
+  "agnostic_nms": true,
   "fps": 30.0,
   "start_sec": 0.0,
   "frames": 422,
   "tracks": {
     "1": {
-      "class": "cat",
-      "frames_seen": 154,
-      "path_length_px": 2931.3
+      "class": "dog",
+      "frames_seen": 88,
+      "path_length_px": 978.6
     },
     "2": {
       "class": "dog",
-      "frames_seen": 9,
-      "path_length_px": 97.4
+      "frames_seen": 25,
+      "path_length_px": 836.9
     },
     "3": {
-      "class": "cat",
-      "frames_seen": 16,
-      "path_length_px": 751.1
-    },
-    "8": {
       "class": "dog",
-      "frames_seen": 8,
-      "path_length_px": 90.6
+      "frames_seen": 419,
+      "path_length_px": 5539.5
     },
-    "19": {
+    "4": {
       "class": "dog",
-      "frames_seen": 22,
-      "path_length_px": 86.5
-    },
-    "30": {
-      "class": "cat",
       "frames_seen": 3,
-      "path_length_px": 37.4
+      "path_length_px": 43.8
     },
-    "37": {
-      "class": "cat",
-      "frames_seen": 3,
-      "path_length_px": 189.6
-    },
-    "44": {
-      "class": "dog",
-      "frames_seen": 10,
-      "path_length_px": 288.8
-    },
-    "52": {
-      "class": "dog",
-      "frames_seen": 18,
-      "path_length_px": 703.5
-    },
-    "53": {
-      "class": "dog",
-      "frames_seen": 7,
-      "path_length_px": 72.4
-    },
-    "68": {
-      "class": "cat",
-      "frames_seen": 2,
-      "path_length_px": 29.8
-    },
-    "69": {
-      "class": "cat",
-      "frames_seen": 1,
-      "path_length_px": 0.0
-    },
-    "70": {
-      "class": "dog",
-      "frames_seen": 172,
-      "path_length_px": 5257.5
-    },
-    "80": {
-      "class": "dog",
-      "frames_seen": 26,
-      "path_length_px": 82.6
-    },
-    "86": {
-      "class": "dog",
-      "frames_seen": 2,
-      "path_length_px": 101.0
-    },
-    "87": {
+    "9": {
       "class": "bird",
-      "frames_seen": 5,
-      "path_length_px": 61.9
+      "frames_seen": 227,
+      "path_length_px": 4599.6
     },
-    "89": {
+    "16": {
       "class": "dog",
-      "frames_seen": 60,
-      "path_length_px": 1089.6
+      "frames_seen": 15,
+      "path_length_px": 691.3
     },
-    "94": {
-      "class": "cat",
-      "frames_seen": 9,
-      "path_length_px": 168.0
+    "21": {
+      "class": "dog",
+      "frames_seen": 3,
+      "path_length_px": 69.8
+    },
+    "26": {
+      "class": "bird",
+      "frames_seen": 6,
+      "path_length_px": 969.8
+    },
+    "27": {
+      "class": "bird",
+      "frames_seen": 2,
+      "path_length_px": 32.8
     }
   }
 }

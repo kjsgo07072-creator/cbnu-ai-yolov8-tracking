@@ -22,7 +22,8 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--source", required=True)
 ap.add_argument("--model", default=str(ROOT / "01_trained_model/best.pt"))
 ap.add_argument("--tracker", default="bytetrack.yaml")
-ap.add_argument("--conf", type=float, default=0.1)
+ap.add_argument("--conf", type=float, default=0.4)
+ap.add_argument("--agnostic-nms", action="store_true", help="클래스가 달라도 겹치는 박스는 하나만 남김")
 ap.add_argument("--line-y", type=float, default=0.55, help="가로 카운팅 선의 높이 (화면 높이 대비 비율)")
 ap.add_argument("--name", default=None)
 args = ap.parse_args()
@@ -40,6 +41,7 @@ counter = solutions.ObjectCounter(
     model=args.model, region=region, tracker=args.tracker, conf=args.conf,
     show=False, show_in=True, show_out=True, line_width=3, verbose=False,
 )
+counter.track_add_args["agnostic_nms"] = args.agnostic_nms  # ObjectCounter는 이 옵션을 track()에 넘기지 않아 직접 추가
 writer = cv2.VideoWriter(str(out / "counting_raw.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), fps, (W, H))
 while True:
     ok, frame = cap.read()
@@ -51,7 +53,7 @@ writer.release()
 cap.release()
 
 result = {
-    "source": str(src), "model": args.model, "tracker": args.tracker, "conf": args.conf,
+    "source": str(src), "model": args.model, "tracker": args.tracker, "conf": args.conf, "agnostic_nms": args.agnostic_nms,
     "line": region, "in_count": counter.in_count, "out_count": counter.out_count,
     "classwise": {k: dict(v) for k, v in counter.classwise_count.items()},
 }

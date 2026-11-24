@@ -1,71 +1,122 @@
 {
-  "source": "videos/input_dogs_walk_10s.mp4",
-  "model": "/Users/kimjunsu/Downloads/cbnu-ai-task/runs/pets_yolov8n/weights/best.pt",
+  "source": "input_videos/input_dogs_walk_10s.mp4",
+  "model": "runs/pets_yolov8n_freeze10/weights/best.pt",
   "tracker": "bytetrack.yaml",
-  "conf": 0.1,
+  "conf": 0.4,
+  "agnostic_nms": true,
   "fps": 60.0,
   "start_sec": 0.0,
   "frames": 600,
   "tracks": {
     "1": {
       "class": "dog",
-      "frames_seen": 136,
-      "path_length_px": 1569.6
+      "frames_seen": 8,
+      "path_length_px": 277.2
     },
-    "7": {
-      "class": "cat",
-      "frames_seen": 4,
-      "path_length_px": 53.5
+    "2": {
+      "class": "dog",
+      "frames_seen": 54,
+      "path_length_px": 199.9
+    },
+    "5": {
+      "class": "dog",
+      "frames_seen": 238,
+      "path_length_px": 1237.4
+    },
+    "6": {
+      "class": "bird",
+      "frames_seen": 25,
+      "path_length_px": 461.6
+    },
+    "8": {
+      "class": "dog",
+      "frames_seen": 1,
+      "path_length_px": 0.0
+    },
+    "9": {
+      "class": "dog",
+      "frames_seen": 1,
+      "path_length_px": 0.0
     },
     "10": {
       "class": "dog",
+      "frames_seen": 31,
+      "path_length_px": 191.2
+    },
+    "11": {
+      "class": "dog",
+      "frames_seen": 10,
+      "path_length_px": 55.3
+    },
+    "12": {
+      "class": "bird",
+      "frames_seen": 185,
+      "path_length_px": 885.7
+    },
+    "13": {
+      "class": "dog",
+      "frames_seen": 226,
+      "path_length_px": 539.2
+    },
+    "16": {
+      "class": "dog",
       "frames_seen": 1,
       "path_length_px": 0.0
     },
-    "19": {
+    "17": {
+      "class": "cat",
+      "frames_seen": 64,
+      "path_length_px": 946.0
+    },
+    "21": {
       "class": "dog",
-      "frames_seen": 202,
-      "path_length_px": 745.6
+      "frames_seen": 124,
+      "path_length_px": 869.8
+    },
+    "22": {
+      "class": "bird",
+      "frames_seen": 6,
+      "path_length_px": 40.9
     },
     "23": {
       "class": "dog",
+      "frames_seen": 110,
+      "path_length_px": 476.2
+    },
+    "27": {
+      "class": "dog",
+      "frames_seen": 79,
+      "path_length_px": 261.9
+    },
+    "28": {
+      "class": "bird",
+      "frames_seen": 13,
+      "path_length_px": 439.1
+    },
+    "31": {
+      "class": "dog",
       "frames_seen": 2,
-      "path_length_px": 0.3
+      "path_length_px": 28.4
     },
     "32": {
       "class": "dog",
-      "frames_seen": 5,
-      "path_length_px": 8.0
+      "frames_seen": 24,
+      "path_length_px": 338.2
+    },
+    "33": {
+      "class": "bird",
+      "frames_seen": 8,
+      "path_length_px": 125.8
+    },
+    "36": {
+      "class": "dog",
+      "frames_seen": 4,
+      "path_length_px": 82.1
     },
     "37": {
       "class": "dog",
-      "frames_seen": 53,
-      "path_length_px": 274.4
-    },
-    "42": {
-      "class": "bird",
-      "frames_seen": 9,
-      "path_length_px": 68.6
-    },
-    "43": {
-      "class": "dog",
-      "frames_seen": 3,
-      "path_length_px": 7.5
-    },
-    "45": {
-      "class": "dog",
       "frames_seen": 1,
       "path_length_px": 0.0
-    },
-    "52": {
-      "class": "dog",
-      "frames_seen": 33,
-      "path_length_px": 473.5
-    },
-    "53": {
-      "class": "bird",
-      "frames_seen": 4,
-      "path_length_px": 5.3
     }
   }
 }

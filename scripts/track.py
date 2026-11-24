@@ -35,7 +35,8 @@ def main():
     ap.add_argument("--source", required=True)
     ap.add_argument("--model", default=str(ROOT / "01_trained_model/best.pt"))
     ap.add_argument("--tracker", default="botsort.yaml", help="botsort.yaml 또는 bytetrack.yaml")
-    ap.add_argument("--conf", type=float, default=0.25)
+    ap.add_argument("--conf", type=float, default=0.4)
+    ap.add_argument("--agnostic-nms", action="store_true", help="클래스가 달라도 겹치는 박스는 하나만 남김 (같은 강아지를 dog·cat 박스로 중복 감지하는 문제 완화)")
     ap.add_argument("--start", type=float, default=0.0, help="시작 시각(초)")
     ap.add_argument("--duration", type=float, default=5.0, help="저장할 길이(초)")
     ap.add_argument("--tail", type=int, default=60, help="영상에 그릴 궤적 꼬리 길이(프레임)")
@@ -70,7 +71,7 @@ def main():
         processed += 1
         if background is None:
             background = frame.copy()
-        res = model.track(frame, persist=True, tracker=args.tracker, conf=args.conf, verbose=False)[0]
+        res = model.track(frame, persist=True, tracker=args.tracker, conf=args.conf, agnostic_nms=args.agnostic_nms, verbose=False)[0]
         vis = frame.copy()
         b = res.boxes
         if b.id is not None:
@@ -121,7 +122,7 @@ def main():
 
     # 3) 요약
     summary = {
-        "source": str(src), "model": args.model, "tracker": args.tracker, "conf": args.conf,
+        "source": str(src), "model": args.model, "tracker": args.tracker, "conf": args.conf, "agnostic_nms": args.agnostic_nms,
         "fps": fps, "start_sec": args.start, "frames": processed,
         "tracks": {
             str(tid): {

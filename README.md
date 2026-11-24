@@ -50,81 +50,103 @@ trajectories/          객체별 이동 궤적 (CSV, 그림) · 카운팅 결과
 | 항목 | 값 |
 |---|---|
 | 모델 | YOLOv8n (COCO 사전학습 `yolov8n.pt`에서 전이학습) |
+| **최종 설정** | **백본 고정 (`freeze=10`)** — 특징 추출부(0~9층)는 COCO 가중치 그대로 두고 검출 헤드만 학습 |
 | 라이브러리 | Ultralytics 8.4.218, PyTorch 2.15 |
 | 장치 | Apple M1 Max GPU (MPS) |
 | Epochs / imgsz / batch | 100 / 640 / 16 (optimizer auto → AdamW) |
-| 학습 시간 | 약 13분 |
+| 학습 시간 | 약 10분 |
 
 ```bash
-python scripts/train.py --epochs 100
+python scripts/train.py --epochs 100 --freeze 10
 ```
 
-### 성능
+### 1차 → 2차 → 3차 학습 비교
+
+| | 1차: 조기 종료 | 2차: 100 에폭 | **3차: 백본 고정 (최종)** |
+|---|---|---|---|
+| 설정 | `patience=20` → 21 에폭에서 멈춤 | `patience=100`, 전체 층 학습 | `freeze=10`, 헤드만 학습 |
+| Valid mAP50 | 0.364 | 0.544 | **0.686** |
+| Test mAP50 | 0.493 | 0.413 | **0.673** |
+| Test mAP50 (dog) | 0.233 | 0.181 | **0.387** |
+| Test mAP50-95 | 0.323 | 0.245 | **0.479** |
+
+300장으로 전체 층을 다시 학습하면 COCO 12만 장으로 배운 특징을 잃어버려(catastrophic forgetting) 성능이 오히려 떨어졌습니다.
+백본을 고정해 사전학습 특징을 유지하자 valid·test 모두 크게 올랐습니다.
+
+### 최종 모델 성능 (3차)
 
 | 세트 | 클래스 | Precision | Recall | mAP50 | mAP50-95 |
 |---|---|---|---|---|---|
-| Valid (60장) | **all** | 0.554 | 0.558 | **0.544** | 0.320 |
-| | bird | 0.533 | 0.524 | 0.528 | 0.316 |
-| | cat | 0.642 | 0.568 | 0.559 | 0.303 |
-| | dog | 0.486 | 0.583 | 0.545 | 0.341 |
-| Test (30장) | **all** | 0.539 | 0.435 | **0.413** | 0.245 |
-| | bird | 0.632 | 0.562 | 0.496 | 0.319 |
-| | cat | 0.659 | 0.529 | 0.563 | 0.284 |
-| | dog | 0.326 | 0.214 | 0.181 | 0.132 |
+| Valid (60장) | **all** | 0.760 | 0.558 | **0.686** | 0.508 |
+| | bird | 0.937 | 0.619 | 0.738 | 0.512 |
+| | cat | 0.665 | 0.514 | 0.684 | 0.509 |
+| | dog | 0.680 | 0.542 | 0.634 | 0.502 |
+| Test (30장) | **all** | 0.784 | 0.603 | **0.673** | 0.479 |
+| | bird | 0.777 | 0.688 | 0.800 | 0.545 |
+| | cat | 0.794 | 0.765 | 0.832 | 0.612 |
+| | dog | 0.782 | 0.357 | 0.387 | 0.279 |
 
-![학습 곡선](training_results/train_e100/results.png)
+![학습 곡선](training_results/train_3rd_freeze10/results.png)
 
-첫 시도는 `patience=20`(조기 종료)으로 21 에폭에서 멈춰 valid mAP50 0.364에 그쳤고,
-조기 종료를 끄고 100 에폭 학습해 valid mAP50 0.544로 올렸습니다 ([`training_results/train_try1_e21`](training_results/train_try1_e21)).
+학습 결과 폴더: [`train_3rd_freeze10`](training_results/train_3rd_freeze10) (최종) · [`train_2nd_e100`](training_results/train_2nd_e100) · [`train_1st_e21`](training_results/train_1st_e21)
 
 ## 3. 객체 추적 · 궤적 저장
 
 ```bash
-python scripts/track.py --source input_videos/input_dogs_walk_10s.mp4 --duration 10 --conf 0.1 --tracker bytetrack.yaml
+python scripts/track.py --source input_videos/input_dogs_walk_10s.mp4 --duration 10 --conf 0.4 --agnostic-nms --tracker bytetrack.yaml
 ```
 
 - `model.track(..., persist=True, tracker="bytetrack.yaml")`로 프레임마다 ID를 유지
+- `agnostic_nms`: 같은 강아지를 dog·cat 박스로 동시에 잡는 중복을 하나로 정리 → ID 수 크게 감소
 - Ultralytics object_tracking 예제처럼 박스 중심점을 이어 궤적을 그리고, **궤적을 따로 저장**하도록 코드를 수정
   - [`trajectories.csv`](trajectories/tracking_10s/trajectories.csv): `frame, time_sec, track_id, class, conf, cx, cy, x1, y1, x2, y2`
   - [`trajectories.png`](trajectories/tracking_10s/trajectories.png): ID별 전체 이동 경로
 
 | 영상 | 강아지 감지 프레임 | 생성된 ID | 가장 오래 유지된 ID |
 |---|---|---|---|
-| 10초 (600 프레임) | 366 (61%) | 12 | dog #19 — 202 프레임 (3.4초) |
-| 5초 (300 프레임, 3.5~8.5초) | 244 (81%) | 8 | dog #5 — 202 프레임 (3.4초) |
+| 10초 (600 프레임) | 504 (84%) | 22 | dog #5 — 238 프레임 (4.0초) |
+| 5초 (300 프레임, 3.5~8.5초) | 274 (91%) | 12 | dog #5 — 226 프레임 (3.8초) |
+
+(2차 모델은 10초 영상에서 61%, 마지막 장면의 강아지 2마리는 거의 놓쳤습니다.)
 
 ## 4. 객체 카운팅
 
 ```bash
-python scripts/count.py --source input_videos/input_dogs_walk_10s.mp4 --line-y 0.48
+python scripts/count.py --source input_videos/input_dogs_walk_10s.mp4 --conf 0.4 --agnostic-nms --line-y 0.55
 ```
 
-Ultralytics `solutions.ObjectCounter`에 학습한 모델을 넣고, 화면 높이 48% 위치에 가로 선을 그어 선을 지나간 객체를 셌습니다.
-결과: **dog IN 2 · OUT 1**, bird IN 1 (강아지를 bird로 잘못 분류한 오탐).
+Ultralytics `solutions.ObjectCounter`에 학습한 모델을 넣고, 화면 높이 55% 위치에 가로 선을 그어 선을 지나간 객체를 ID별로 한 번씩 셌습니다.
+결과: **dog IN 1 · OUT 1, cat IN 1** (두 번째 강아지를 cat으로 분류), **bird OUT 1** (사람 다리 오탐).
+장면 전환이 있는 영상이라 같은 강아지가 새 ID를 받아 다시 세어질 수 있습니다.
 
 ## 5. 추가 실험 — 우리 집 강아지 꼬맹이 · 주남이
+
+<img src="docs/images/preview_kkomaeng_junam.gif" width="240" align="right">
 
 직접 휴대폰으로 촬영한 14초 영상(1080×1920, 30fps, 장면 전환 없음)에 같은 모델로 추적을 적용했습니다.
 
 ```bash
-python scripts/track.py --source input_videos/input_kkomaeng_junam_14s.mp4 --duration 15 --conf 0.1 --tracker bytetrack.yaml
+python scripts/track.py --source input_videos/input_kkomaeng_junam_14s.mp4 --duration 15 --conf 0.4 --agnostic-nms
 ```
 
-| 항목 | 결과 |
-|---|---|
-| 객체가 감지된 프레임 | 368 / 422 (87%) |
-| dog로 감지된 프레임 | 255 / 422 (60%) |
-| 가장 오래 유지된 ID | #70 갈색 강아지 172 프레임 (5.7초) |
-| 흰 강아지 | 후반부 #89로 60 프레임 추적, 전반부는 대부분 놓침 |
+| 항목 | 2차 모델 | **3차 모델 (최종)** |
+|---|---|---|
+| dog로 감지된 프레임 | 60% | **81%** |
+| 생성된 ID | 18 | **9** |
+| 갈색 강아지 | 최장 172 프레임 (5.7초) | **#3 — 419/422 프레임 (영상 전체)** |
+| 흰 강아지 | 후반부 60 프레임만 | **#9 — 227 프레임 (약 5~12초)** |
 
-- 장면 전환이 없어 YouTube 영상보다 ID가 오래 유지됨
-- 털을 짧게 깎은 모습·위에서 내려다본 각도가 COCO 사진과 달라 cat/bird로 잘못 분류되거나 흰 강아지를 놓침, 노란 장난감 오탐도 발생
+- 장면 전환이 없어 같은 ID가 영상 끝까지 유지됨
+- 털을 짧게 깎은 모습·위에서 내려다본 각도가 COCO 사진과 달라 일부 프레임은 bird/cat으로 분류됨, 흰 강아지가 카메라에 아주 가까워지는 마지막 1~2초는 놓침
 - 궤적: [`trajectories/kkomaeng_junam_14s/`](trajectories/kkomaeng_junam_14s/)
+
+<br clear="right">
 
 ## 한계
 
-- 데이터 300장, nano 모델이라 test mAP50 0.41, 특히 dog test 성능(0.18)이 낮음
-- 입력 영상에 장면 전환(4.05초, 7.9초)이 있어 장면이 바뀔 때마다 새 ID가 생기고, 카운팅이 중복될 수 있음
+- 데이터 300장, nano 모델이라 dog test mAP50(0.39)이 다른 부류보다 낮음
+- 강아지를 bird/cat으로 잘못 분류하는 프레임, 사람 다리를 bird로 감지하는 오탐이 남아 있음
+- YouTube 영상은 장면 전환(4.05초, 7.9초)이 있어 장면이 바뀔 때마다 새 ID가 생기고, 카운팅이 중복될 수 있음
 
 ## 참고
 

@@ -1,28 +1,33 @@
 {
-  "source": "videos/input_dogs_walk_10s.mp4",
-  "model": "/Users/kimjunsu/Downloads/cbnu-ai-task/runs/pets_yolov8n/weights/best.pt",
+  "source": "input_videos/input_dogs_walk_10s.mp4",
+  "model": "runs/pets_yolov8n_freeze10/weights/best.pt",
   "tracker": "bytetrack.yaml",
-  "conf": 0.1,
+  "conf": 0.4,
+  "agnostic_nms": true,
   "line": [
     [
       0,
-      345
+      396
     ],
     [
       1280,
-      345
+      396
     ]
   ],
-  "in_count": 3,
-  "out_count": 1,
+  "in_count": 2,
+  "out_count": 2,
   "classwise": {
     "dog": {
-      "IN": 2,
+      "IN": 1,
       "OUT": 1
     },
-    "bird": {
+    "cat": {
       "IN": 1,
       "OUT": 0
+    },
+    "bird": {
+      "IN": 0,
+      "OUT": 1
     }
   }
 }

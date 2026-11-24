@@ -21,6 +21,7 @@ ap.add_argument("--imgsz", type=int, default=640)
 ap.add_argument("--batch", type=int, default=16)
 ap.add_argument("--patience", type=int, default=100, help="조기 종료 기준 (첫 시도는 20이라 21 에폭에서 멈춤)")
 ap.add_argument("--device", default="mps", help="Apple GPU=mps, NVIDIA=0, CPU=cpu")
+ap.add_argument("--freeze", type=int, default=0, help="앞쪽 N개 레이어 고정 (YOLOv8 백본=10)")
 ap.add_argument("--name", default="pets_yolov8n")
 args = ap.parse_args()
 
@@ -36,7 +37,7 @@ data_yaml.write_text(
 model = YOLO(args.model)
 model.train(
     data=str(data_yaml), epochs=args.epochs, imgsz=args.imgsz, batch=args.batch,
-    device=args.device, workers=4, seed=0, patience=args.patience,
+    device=args.device, workers=4, seed=0, patience=args.patience, freeze=args.freeze or None,
     project=str(ROOT / "runs"), name=args.name, exist_ok=True,
 )
 
