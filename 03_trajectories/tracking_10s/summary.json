@@ -1,0 +1,71 @@
+{
+  "source": "videos/input_dogs_walk_10s.mp4",
+  "model": "/Users/kimjunsu/Downloads/cbnu-ai-task/runs/pets_yolov8n/weights/best.pt",
+  "tracker": "bytetrack.yaml",
+  "conf": 0.1,
+  "fps": 60.0,
+  "start_sec": 0.0,
+  "frames": 600,
+  "tracks": {
+    "1": {
+      "class": "dog",
+      "frames_seen": 136,
+      "path_length_px": 1569.6
+    },
+    "7": {
+      "class": "cat",
+      "frames_seen": 4,
+      "path_length_px": 53.5
+    },
+    "10": {
+      "class": "dog",
+      "frames_seen": 1,
+      "path_length_px": 0.0
+    },
+    "19": {
+      "class": "dog",
+      "frames_seen": 202,
+      "path_length_px": 745.6
+    },
+    "23": {
+      "class": "dog",
+      "frames_seen": 2,
+      "path_length_px": 0.3
+    },
+    "32": {
+      "class": "dog",
+      "frames_seen": 5,
+      "path_length_px": 8.0
+    },
+    "37": {
+      "class": "dog",
+      "frames_seen": 53,
+      "path_length_px": 274.4
+    },
+    "42": {
+      "class": "bird",
+      "frames_seen": 9,
+      "path_length_px": 68.6
+    },
+    "43": {
+      "class": "dog",
+      "frames_seen": 3,
+      "path_length_px": 7.5
+    },
+    "45": {
+      "class": "dog",
+      "frames_seen": 1,
+      "path_length_px": 0.0
+    },
+    "52": {
+      "class": "dog",
+      "frames_seen": 33,
+      "path_length_px": 473.5
+    },
+    "53": {
+      "class": "bird",
+      "frames_seen": 4,
+      "path_length_px": 5.3
+    }
+  }
+}

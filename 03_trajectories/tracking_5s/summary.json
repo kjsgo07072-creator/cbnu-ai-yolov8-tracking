@@ -1,0 +1,51 @@
+{
+  "source": "videos/input_dogs_walk_10s.mp4",
+  "model": "/Users/kimjunsu/Downloads/cbnu-ai-task/runs/pets_yolov8n/weights/best.pt",
+  "tracker": "bytetrack.yaml",
+  "conf": 0.1,
+  "fps": 60.0,
+  "start_sec": 3.5,
+  "frames": 300,
+  "tracks": {
+    "1": {
+      "class": "dog",
+      "frames_seen": 29,
+      "path_length_px": 268.7
+    },
+    "5": {
+      "class": "dog",
+      "frames_seen": 202,
+      "path_length_px": 745.6
+    },
+    "9": {
+      "class": "dog",
+      "frames_seen": 2,
+      "path_length_px": 0.3
+    },
+    "18": {
+      "class": "dog",
+      "frames_seen": 5,
+      "path_length_px": 8.0
+    },
+    "23": {
+      "class": "dog",
+      "frames_seen": 16,
+      "path_length_px": 63.8
+    },
+    "28": {
+      "class": "bird",
+      "frames_seen": 9,
+      "path_length_px": 68.6
+    },
+    "29": {
+      "class": "dog",
+      "frames_seen": 3,
+      "path_length_px": 7.5
+    },
+    "31": {
+      "class": "dog",
+      "frames_seen": 1,
+      "path_length_px": 0.0
+    }
+  }
+}

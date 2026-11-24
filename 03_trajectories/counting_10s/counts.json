@@ -1,0 +1,28 @@
+{
+  "source": "videos/input_dogs_walk_10s.mp4",
+  "model": "/Users/kimjunsu/Downloads/cbnu-ai-task/runs/pets_yolov8n/weights/best.pt",
+  "tracker": "bytetrack.yaml",
+  "conf": 0.1,
+  "line": [
+    [
+      0,
+      345
+    ],
+    [
+      1280,
+      345
+    ]
+  ],
+  "in_count": 3,
+  "out_count": 1,
+  "classwise": {
+    "dog": {
+      "IN": 2,
+      "OUT": 1
+    },
+    "bird": {
+      "IN": 1,
+      "OUT": 0
+    }
+  }
+}

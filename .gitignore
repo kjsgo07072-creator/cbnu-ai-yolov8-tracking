@@ -1,0 +1,13 @@
+.venv/
+raw/
+datasets/
+runs/
+outputs/
+roboflow_upload/
+weights/
+videos/
+runs_train.log
+__pycache__/
+*.pt
+!01_trained_model/best.pt
+.DS_Store
